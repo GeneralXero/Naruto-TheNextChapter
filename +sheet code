@@ -1,0 +1,23 @@
+@@The following code goes on the Sheet Master!
+
+&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fun`getstats)]%r[u(title`skills)]%r[u(fun`getskills)]
+
+&fun`getskills Sheet Master = table(iter(get(%#/sheet`skillslist), [v(skill`%i0`rank)]: [capstr([edit(%i0,.,%b)])] ([get(%#/sheet`skill`%i0`rank)])\,),38, 78,\,)
+
+&fun`getstats Sheet Master = table(StatA [get(%#/sheet`stats`stata`real)]([get(%#/sheet`stats`stata`temp)]) StatB [get(%#/sheet`stats`statb`real)]([get(%#/sheet`stats`statb`temp)]) StatC [get(%#/sheet`stats`statc`real)]([get(%#/sheet`stats`statc`temp)]) StatD [get(%#/sheet`stats`statd`real)]([get(%#/sheet`stats`statd`temp)]) StatE [get(%#/sheet`stats`state`real)]([get(%#/sheet`stats`state`temp)]) StatF [get(%#/sheet`stats`statf`real)]([get(%#/sheet`stats`statf`temp)]), 7, 50)
+
+&title`main Sheet Master = center([ansi(hy, ~)] [ansi(hw, Character Sheet)] [ansi(hy, ~)], width(%#), %b)
+&title`skills Sheet Master = center([ansi(hy, ~)] [ansi(hw, Skills)] [ansi(hy, ~)], width(%#), [ansi(hm, -=~~~=-)])
+&title`stat Sheet Master = center([ansi(hy, ~)] [ansi(hw, Stats)] [ansi(hy, ~)], width(%#), [ansi(hg, -=~~~=-)])
+
+@@For the following, <skill name> should be written with periods (.) instead of spaces ( )
+@@ie: 'Falcon Punch' should be 'falcon.punch' Proper formatting is as it sounds.
+&skill`<skill name>`rank Sheet Master = <A, B, C, D> @@A is the highest rank while D is the lowest for now.
+&skill`<skill name>`name Sheet Master = <skill name properly formatted>
+&skill`listings Sheet Master = <A list of all the skills formatted like the above <skill name>
+
+@@The following code goes on the Players!
+
+&sheet`skill`<skill name>`rank <player dbref> = <1, 2, 3, 4> @@1 is the lowest, 4 is the highest
+&sheet`stats`<stat name>`temp <player dbref> = <##> @@This is the temporary stat.
+&sheet`stats`<stat name>`real <player dbref> = <##> @@This is the actual stat.
