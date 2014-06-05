@@ -12,7 +12,7 @@
 
 @@For the following, <skill name> should be written with periods (.) instead of spaces ( )
 @@ie: 'Falcon Punch' should be 'falcon.punch' Proper formatting is as it sounds.
-&skill`<skill name>`rank Sheet Master = <A, B, C, D> @@A is the highest rank while D is the lowest for now.
+&skill`<skill name>`rank Sheet Master = <S, A, B, C, D, E> @@S is the highest rank while E is the lowest for now.
 &skill`<skill name>`name Sheet Master = <skill name properly formatted>
 &skill`listings Sheet Master = <A list of all the skills formatted like the above <skill name>
 
