@@ -1,7 +1,12 @@
 @@The following code goes on the Sheet Master!
 
-&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fun`gethealth)]%r%r[u(fun`getstats)]%r%r[u(fun`getrecdam)]%r[u(title`skills)]%r[u(fun`getskills)]%r[u(title`meritflaws)]%r[u(fun`getmeritflaws)]
+&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fun`gethealth)]%r%r[u(fun`getstats)]%r%r[u(fun`getrecdam)]%r[u(title`skills)]%r[u(fun`getskills)]%r[u(title`meritflaws)]%r[u(fun`getmeritflaws)]%r[u(title`end, hr)]
 
+&cmd`sheet`share Sheet Master = $+sheet/share *: @pemit *%0 = [u(title`main, name(%#)'s)]%r[u(title`stat)]%r[u(fun`gethealth)]%r%r[u(fun`getstats)]%r%r[u(fun`getrecdam)]%r[u(title`skills)]%r[u(fun`getskills)]%r[u(title`meritflaws)]%r[u(fun`getmeritflaws)]%r[u(title`end, hr)]
+
+&cmd`sheet`stats Sheet Master = $+sheet/stats: @pemit %#=[u(title`stat)]%r[u(fun`gethealth)]%r%r[u(fun`getstats)]%r[u(title`end, hg)]
+
+&cmd`sheet`skills Sheet Master = $+sheet/skills: @pemit %#=[u(title`skills)]%r[u(fun`getskills)][u(title`end, hm)]
 &cmd`sheet`help Sheet Master = $+sheet/help: @pemit/silent %#=[u(msg`help)]
 
 &msg`help Sheet Master = [center([ansi(hy, ~)] [ansi(hw, Sheet Help)] [ansi(hy, ~)], width(%#), [ansi(c, -=~~=-)])]%rThis is the sheet system! This allows you to see various stats on your character as well as the different skills your character can use. It also displays your character's merits and flaws. Here is a breakdown of the commands (what you type is in [ansi(hg, this color)]):%r%r[ansi(hg, +sheet)]: This shows you the full sheet! Skills, stats, merits and flaws are all here!%r%r[ansi(hg, +sheet/share <name>)]: This allows you to share your sheet with <name>, with <name> being the name of a player on this MUSH.%r%r[ansi(hg, +sheet/stats)]: This will make it so you will only see you stats (Nin, Gen, Tai, Mind, Body, Spirit).%r%r[ansi(hg, +sheet/skills)]: This command will allow for you to only look at what skills are available to you.%r%r[ljust(,width(%#), [ansi(c, -=~~=-)])]
@@ -14,9 +19,11 @@
 
 &fun`getstats Sheet Master = table(StatA [get(%#/sheet`stats`stata`real)]([get(%#/sheet`stats`stata`temp)]) StatB [get(%#/sheet`stats`statb`real)]([get(%#/sheet`stats`statb`temp)]) StatC [get(%#/sheet`stats`statc`real)]([get(%#/sheet`stats`statc`temp)]) StatD [get(%#/sheet`stats`statd`real)]([get(%#/sheet`stats`statd`temp)]) StatE [get(%#/sheet`stats`state`real)]([get(%#/sheet`stats`state`temp)]) StatF [get(%#/sheet`stats`statf`real)]([get(%#/sheet`stats`statf`temp)]), 7, 50)
 
-&title`main Sheet Master = center([ansi(hy, ~)] [ansi(hw, Character Sheet)] [ansi(hy, ~)], width(%#), %b)
+&title`main Sheet Master = center([ansi(hy, ~)] [ansi(hw,%0 Character Sheet)] [ansi(hy, ~)], width(%#), [ansi(hr, -=~~~=-)])
 &title`skills Sheet Master = center([ansi(hy, ~)] [ansi(hw, Skills)] [ansi(hy, ~)], width(%#), [ansi(hm, -=~~~=-)])
 &title`stat Sheet Master = center([ansi(hy, ~)] [ansi(hw, Stats)] [ansi(hy, ~)], width(%#), [ansi(hg, -=~~~=-)])
+&title`meritflaws Sheet Master = center([ansi(hy, ~)] [ansi(hw, Merits and Flaws)] [ansi(hy, ~)], width(%#), [ansi(hc, -=~~~=-)])
+&title`end Sheet Master = center([ansi(hy, ~)] [ansi(hw, End)] [ansi(hy, ~)], width(%#), [ansi(%0, -=~~~=--)])
 
 @@For the following, <skill name> should be written with periods (.) instead of spaces ( )
 @@ie: 'Falcon Punch' should be 'falcon.punch' Proper formatting is as it sounds.
