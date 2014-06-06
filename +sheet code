@@ -1,6 +1,14 @@
 @@The following code goes on the Sheet Master!
 
-&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fun`getstats)]%r[u(title`skills)]%r[u(fun`getskills)]
+&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fun`gethealth)]%r%r[u(fun`getstats)]%r%r[u(fun`getrecdam)]%r[u(title`skills)]%r[u(fun`getskills)]%r[u(title`meritflaws)]%r[u(fun`getmeritflaws)]
+
+&cmd`sheet`help Sheet Master = $+sheet/help: @pemit/silent %#=[u(msg`help)]
+
+&msg`help Sheet Master = [center([ansi(hy, ~)] [ansi(hw, Sheet Help)] [ansi(hy, ~)], width(%#), [ansi(c, -=~~=-)])]%rThis is the sheet system! This allows you to see various stats on your character as well as the different skills your character can use. It also displays your character's merits and flaws. Here is a breakdown of the commands (what you type is in [ansi(hg, this color)]):%r%r[ansi(hg, +sheet)]: This shows you the full sheet! Skills, stats, merits and flaws are all here!%r%r[ansi(hg, +sheet/share <name>)]: This allows you to share your sheet with <name>, with <name> being the name of a player on this MUSH.%r%r[ansi(hg, +sheet/stats)]: This will make it so you will only see you stats (Nin, Gen, Tai, Mind, Body, Spirit).%r%r[ansi(hg, +sheet/skills)]: This command will allow for you to only look at what skills are available to you.%r%r[ljust(,width(%#), [ansi(c, -=~~=-)])]
+
+&fun`gethealth Sheet Master = [ljust(HP: [get(%#/sheet`stats`hp`temp)]/[get(%#/sheet`stats`hp`real)], 22)][ljust(Chakra: [get(%#/sheet`stats`chakra`real)], 22)][ljust(Stamina: [get(%#/sheet`stats`stamina`real)], 22)]
+
+&fun`getrecdam Sheet Master = Damage Threshold: [mul(get(%#/sheet`stats`hp`real), .15)]%tChakra Recovery: [round([mul(get(%#/sheet`stats`sprt`temp), .5)], 0)]%tStamina Recovery: [round([mul(get(%#/sheet`stats`body`temp), .5)], 0)]
 
 &fun`getskills Sheet Master = table(iter(get(%#/sheet`skillslist), [v(skill`%i0`rank)]: [capstr([edit(%i0,.,%b)])] ([get(%#/sheet`skill`%i0`rank)])\,),38, 78,\,)
 
