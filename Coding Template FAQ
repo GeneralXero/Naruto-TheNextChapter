@@ -2,3 +2,4 @@ Commands should be under a tree known as cmd
 Functions should be things that Commands use and written as fn
 Things like booleans should be done as bool
 Spaces should be replaced by periods (.)
+Try to be descriptive in the attribute name, but be concise. ie: bool`isStaff
