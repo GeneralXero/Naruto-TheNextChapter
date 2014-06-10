@@ -1,5 +1,5 @@
-Commands should be under a tree known as cmd
-Functions should be things that Commands use and written as fn
-Things like booleans should be done as bool
-Spaces should be replaced by periods (.)
-Try to be descriptive in the attribute name, but be concise. ie: bool`isStaff
+Commands should be under a tree known as cmd. Examples: &cmd`clear`oocheader, &cmd`set`oocheader
+Functions should be things that Commands use and written as fn. Examples: &fn`gethealth, &fn`getstats
+Things like booleans should be done as bool. Examples: &bool`isPlayer, &bool`isStaff, &bool`isConnected
+Spaces should be replaced by periods (.) Examples: &skill`falcon.punch`rank
+Try to be descriptive in the attribute name, but be concise. Examples: bool`isStaff
