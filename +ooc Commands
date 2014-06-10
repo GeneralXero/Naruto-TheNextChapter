@@ -12,3 +12,5 @@
 &cmd`clear`oochead #6=$+ooc/header: @pemit %#= You have cleared your ooc header!;&ooc_header %#
 
 &cmd`clear`oocsay #6=$+ooc/say: @pemit %#= You have cleared your OOC Say!;&ooc_says %#
+
+&cmd`clear #6= $+ooc/clear: @pemit %#=You have cleared both your ooc header and your OOC Say!;&ooc_says %#;&ooc_header %#
