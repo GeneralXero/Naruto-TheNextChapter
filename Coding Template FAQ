@@ -3,3 +3,13 @@ Functions should be things that Commands use and written as fn. Examples: &fn`ge
 Things like booleans should be done as bool. Examples: &bool`isPlayer, &bool`isStaff, &bool`isConnected
 Spaces should be replaced by periods (.) Examples: &skill`falcon.punch`rank
 Try to be descriptive in the attribute name, but be concise. Examples: bool`isStaff
+
+
+-Pueblo Enhancement
+[tagwrap(send,"look %!",%n)]
+
+-Copy Object Attributes
+Help @CPATTR
+
+-Move Object Attributes
+Help @mvattr
