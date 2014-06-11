@@ -3,6 +3,7 @@ Functions should be things that Commands use and written as fn. Examples: &fn`ge
 Things like booleans should be done as bool. Examples: &bool`isPlayer, &bool`isStaff, &bool`isConnected
 Spaces should be replaced by periods (.) Examples: &skill`falcon.punch`rank
 Try to be descriptive in the attribute name, but be concise. Examples: bool`isStaff
+When showing off commands (which are usually in help files), put them in hilite green ANSI [ansi(hg, <Command>)]
 
 
 -Pueblo Enhancement
