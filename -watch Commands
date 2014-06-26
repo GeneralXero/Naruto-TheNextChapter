@@ -1,0 +1,31 @@
+Watch Object
+
+--On Connects and Disconnects--
+
+&ACONNECT Watch-Command=@dolist [setunion(,[lwho()])] = [switch(1, [and([or([haspower(##, See_All)], [orflags(##, WrJ)], [lte([hidden(%#)], 0)])], [member([get(##/Watches)], %#)])], [nspemit(##, [header(watch)] %n has [if([gt([words([ports(%#)])], 1)], re)]connected.)])]
+&ADISCONNECT Watch-Command=@dolist [setunion(,[lwho()])] = @switch [and([or([or([haspower(##, See_All)], [orflags(Wr)])], [not([or([haspower(%#, Hide)], [orflags(Wr)])])])], [member([get(##/Watches)], %#)])]=1, [nspemit(##, [header(watch)] %n has [if(ports(%#),partially%b)]disconnected.)]
+
+--Basic Commands--
+(Adding, removing, iwho, clearing, viewing)
+
+&CMD`ADDWATCH Watch-Command=$-watch *: [setq(0, [pmatch(*%0)])][if([member([get(%#/Watches)], %q0)], [nspemit(%#, [header(watch)] [name(%q0)] is already on your watch list.)], [switch(1, [strmatch(#-1, %q0)], [nspemit(%#, [header(watch)] Non-existent player name: %0)], [strmatch(#-2, %q0)], [nspemit(%#, [header(watch)] Ambiguous player name: %0)], [set(%#, Watches:[setunion([get(%#/watches)], %q0)])][nspemit(%#, [header(watch)] You added [name(%q0)] to your watch list.)])])]
+&CMD`HELP Watch-Command=$-watch/help: [nspemit(%#, [u(desc)])]
+&CMD`IWHO Watch-Command=$-iwho: [nspemit(%#, [ansi(hm, [ljust(Name, 16)][ljust(Alias, 5)][rjust(On For, 10)][rjust(Idle, 5)] Location)]%r[setq(0, [setinter([get(%#/Watches)], [lwho()])])][iter(%q0, [ljust([u(fn`getName, %i0)], 16)][ljust([ansi(y, [alias(%i0)])], 5)][rjust([u(fn`getConn, %i0)], 10)][rjust([u(fn`getIdle, %i0)], 5)]%b[u(fn`getLocation, %i0)],,%r)]%r[ansi(g, [words(%q0)] out of [words([get(%#/Watches)])] connected.)]%r[ansi(hr, Disconnected:)] [setq(8, [setdiff([get(%#/Watches)], %q0)])][iter([sort(%q8, name)], [name(%i0)],,\,%b)])]
+&CMD`REMOVEWATCH Watch-Command=$-unwatch *: [setq(0, [pmatch(*%0)])][if([member([get(%#/Watches)], %q0)], [switch(1, [strmatch(#-1, %q0)], [nspemit(%#, [header(watch)] Non-existent player name: %0)], [strmatch(#-2, %q0)], [nspemit(%#, [header(watch)] Ambiguous player name: %0)], [set(%#, watches:[setdiff([get(%#/watches)], %q0)])][nspemit(%#, [header(watch)] You have removed [name(%q0)] from your watch list.)])], [nspemit(%#, [header(watch)] [name(%q0)] is not on your watch list.)])]
+&CMD`WATCHCLEAR Watch-Command=$-watch: [set(%#, Watches:[filter(filter`player, [get(%#/Watches)])])][if([eq(0, [words([get(%#/watches)])])], [nspemit(%#, [header(watch)] You aren't watching anybody.)], [nspemit(%#, [header(watch)] You are watching: [iter([sort([get(%#/Watches)], name)], [name(%i0)],,\,%b)])])]
+&CMD`WATCHONLINE Watch-Command=$-watch/online: [setq(0, [setinter([get(%#/Watches)], [lwho()])])][if([eq(0, [words([get(%#/watches)])])], [nspemit(%#, [header(watch)] You are not watching anybody.)], [nspemit(%#, [header(watch)] [ansi(hy, WATCHes Online:)] [iter([sort(%q0, name)], [name(%i0)],,\,%b)])])]
+
+--Basic Help File--
+
+&DESCRIBE Watch-Command=Watch Command:%r[ansi(hg,-watch <name>)][ansi(n,: Add a player to your watch list%r)][ansi(hg,-unwatch <name>)][ansi(n,: Remove a player from your watch list%r)][ansi(hg,-watch)][ansi(n,: See your entire watch list%r)][ansi(hg,-watch/online)][ansi(n,: See who is online on your watch list%r)][ansi(hg,-iwho)][ansi(n,: See a nicely formatted version of your watch list)]
+
+--Filter--
+
+&FILTER`PLAYER Watch-Command=[hastype(%0, Player)]
+
+--Basic Functions--
+
+&FN`GETCONN Watch-Command=[setq(3, conn(%0))][switch(1, [eq(-1, %q3)], ---,[lte(%q3, 60)], 00:00, [lt(%q3, 3600)], 00:[if(lt([div(%q3, 60)], 10), 0[div(%q3, 60)], [div(%q3, 60)])], [lt(%q3, 86400)], [if([lt([div(%q3, 3600)], 10)], 0[div(%q3, 3600)], [div(%q3, 3600)])]:[if(lt([mod([div(%q3, 60)], 60)], 10), 0[mod([div(%q3, 60)], 60)], [mod([div(%q3, 60)], 60)])], [div(%q3, 86400)]d [if([lt([mod([div(%q3, 3600)], 24)], 10)], 0[mod([div(%q3, 3600)], 24)], [mod([div(%q3, 3600)], 24)])]:[if(lt([mod([div(%q3, 60)], 60)], 10), 0[mod([div(%q3, 60)], 60)], [mod([div(%q3, 60)], 60)])])]
+&FN`GETIDLE Watch-Command=[setq(4, idle(%0))][switch(1, [eq(-1, %q4)], ---,[lte(%q4, 60)], %q4s, [lt(%q4, 3600)], [div(%q4, 60)]m, [lt(%q4, 86400)], [div(%q4, 3600)]h, [lt(%q4, 604800)], [div(%q4, 86400)]d)]
+&FN`GETLOCATION Watch-Command=[setq(5, [loc(%0)])][switch(1, [and([hasflag(%q5, U)], [strmatch([loc(%#)], %q5)])], [name(%q5)], [hasflag(%q5, U)], ---, [name(%q5)] [if([strmatch(#-1, [zone(%q5)])],,%[[name([zone(%q5)])]])])]
+&FN`GETNAME Watch-Command=[ansi([switch(1, [hasattrval(%0,idle)], m, [hasflag(%0, J)], hc, [hasflag(%0, r)], hg, [hasflag(%0, W)], hr, c)], [name(%0)])]
