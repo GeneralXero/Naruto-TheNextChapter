@@ -1,61 +1,36 @@
-@@The following code goes on the Sheet Master!
+Stuff on the Sheet Master
 
-@@These are all of the commands that you can use on the Sheet Master!
-&cmd`sheet Sheet Master = $+sheet:@pemit %#=[u(title`main)]%r[u(title`stat)]%r[u(fn`gethealth, %#)]%r%r[u(fn`getstats, %#)]%r%r[u(fn`getrecdam, %#)]%r[u(title`skills)]%r[u(fn`getskills, %#)]%r[u(title`meritflaws)]%r[u(fn`getmeritflaws, %#)]%r[u(title`end, hr)]
+--Basic Commands--
 
-&cmd`sheet`share Sheet Master = $+sheet/share *: @pemit *%0 = [u(title`main, name(%#)'s)]%r[u(title`stat)]%r[u(fn`gethealth, %#)]%r%r[u(fn`getstats, %#)]%r%r[u(fn`getrecdam, %#)]%r[u(title`skills)]%r[u(fn`getskills, %#)]%r[u(title`meritflaws)]%r[u(fn`getmeritflaws, %#)]%r[u(title`end, hr)];@pemit %#=You shared your sheet with [name(num(*%0))].
+&CMD`ATTACKS Sheet Master=$-sheet/attacks: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%# #4, [menu(helpfiles, Attacks)]%r[u(fn`getattacks, %q0)]%r[menu(helpfiles, End Attacks)])]
 
-&cmd`sheet`stats Sheet Master = $+sheet/stats: @pemit %#=[u(title`stat)]%r[u(fn`gethealth, %#)]%r%r[u(fn`getstats, %#)]%r[u(title`end, hg)]
+&CMD`DEFENSES Sheet Master=$-sheet/defenses: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Defenses)]%r[u(fn`getdefenses, %q0)]%r[menu(helpfiles, End Defenses)])]
 
-&cmd`sheet`skills Sheet Master = $+sheet/skills: @pemit %#=[u(title`skills)]%r[u(fn`getskills, %#)]%r[u(title`end, hm)]
+&CMD`SHEETHELP Sheet Master=$-sheet/help: [nspemit(%#, [u(desc)])]
 
-&cmd`sheet`help Sheet Master = $+sheet/help: @pemit %#=[u(desc)]
+&CMD`SHEETHELP2 Sheet Master=$-sheet/?: [nspemit(%#, [u(desc)])]
 
-&cmd`sheet`adminview Sheet Master = $+sheet/view *:@pemit %#=[if([orflags(%#, JrW)], [u(title`main, name(%#)'s)]%r[u(title`stat)]%r[u(fn`gethealth, num(*%0))]%r%r[u(fn`getstats, num(*%0))]%r%r[u(fn`getrecdam, num(*%0))]%r[u(title`skills)]%r[u(fn`getskills, num(*%0))]%r[u(title`meritflaws)]%r[u(fn`getmeritflaws, num(*%0))]%r[u(title`end, hr)], You are not permitted to do that!)]
+&CMD`SKILLS Sheet Master=$-sheet/skills: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Skills)]%r[u(fn`getskills, %q0)]%r[menu(helpfiles, End Skills)])]
 
-@@The @desc is the help file. 
-@desc Sheet Master = [center([ansi(hy, ~)] [ansi(hw, Sheet Help)] [ansi(hy, ~)], width(%#), [ansi(c, -=~~=-)])]%rThis is the sheet system! This allows you to see various stats on your character as well as the different skills your character can use. It also displays your character's merits and flaws. Here is a breakdown of the commands (what you type is in [ansi(hg, this color)]):%r%r[ansi(hg, +sheet)]: This shows you the full sheet! Skills, stats, merits and flaws are all here!%r%r[ansi(hg, +sheet/share <name>)]: This allows you to share your sheet with <name>, with <name> being the name of a player on this MUSH.%r%r[ansi(hg, +sheet/stats)]: This will make it so you will only see you stats (Nin, Gen, Tai, Mind, Body, Spirit).%r%r[ansi(hg, +sheet/skills)]: This command will allow for you to only look at what skills are available to you.%r%r[ljust(,width(%#), [ansi(c, -=~~=-)])]
+&CMD`STATS Sheet Master=$-sheet/stats: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Stats Listing)]%r[u(fn`gethealth, %q0)]%r[u(fn`getstats, %q0)]%r[menu(helpfiles, End Stats)])]
 
-@@Functions to get various things from the players and show them from the Sheet Master
-&fn`gethealth Sheet Master = [ljust(HP: [get(%0/sheet`stats`hp`temp)]/[get(%0/sheet`stats`hp`real)], 22)][ljust(Chakra: [get(%0/sheet`stats`chakra`real)], 22)][ljust(Stamina: [get(%0/sheet`stats`stamina`real)], 22)]
+&CMD`TRANSFORMATIONS Sheet Master=$-sheet/transformations: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Transformations)]%r[u(fn`gettransformations, %q0)]%r[menu(helpfiles, End Transformations)])]
 
-&fn`getskills Sheet Master = [table(iter(get(%0/sheet`skillslist), [v(skill`%i0`rank)]: [capstr([edit(%i0,.,%b)])] ([get(%0/sheet`skill`%i0`rank)])\,),38, 78,\,)]
+--Basic Help File--
 
-&fn`getrecdam Sheet Master = Damage Threshold: [mul(get(%0/sheet`stats`hp`real), .15)]%tChakra Recovery: [round([mul(get(%0/sheet`stats`sprt`temp), .5)], 0)]%tStamina Recovery: [round([mul(get(%0/sheet`stats`body`temp), .5)], 0)]
+&DESCRIBE Sheet Master=[menu(helpfiles, +Sheet Help)]%r[prettyprint(-sheet: See your sheet%r-sheet/share <name>: share your sheet%r-sheet/stats: see only your stats%r-sheet/skills: see only your skills%r-sheet/<attacks/defenses/transformations>: See only your attacks/defenses/transformations)]%r[menu(helpfiles, End Help)]
 
-&fn`getstats Sheet Master = table(Mind [get(%0/sheet`stats`mind`real)]([get(%0/sheet`stats`mind`temp)]) Body [get(%0/sheet`stats`body`real)]([get(%0/sheet`stats`body`temp)]) Sprt [get(%0/sheet`stats`sprt`real)]([get(%0/sheet`stats`sprt`temp)]) Nin [get(%0/sheet`stats`nin`real)]([get(%0/sheet`stats`nin`temp)]) Tai [get(%0/sheet`stats`tai`real)]([get(%0/sheet`stats`tai`temp)]) Gen [get(%0/sheet`stats`gen`real)]([get(%0/sheet`stats`gen`temp)]), 7, 50)
+--Functions--
+&FN`GETATTACKS Sheet Master=[u(fn`tableskills, %0, attack)]
 
+&FN`GETDEFENSES Sheet Master=[u(fn`tableskills, %0, defense)]
 
-@@Just some titles to make for nice formatting
-&title`main Sheet Master = center([ansi(hy, ~)] [ansi(hw,%0 Character Sheet)] [ansi(hy, ~)], width(%#), [ansi(hr, -=~~~=-)])
+&FN`GETHEALTH Sheet Master=[ljust(HP: [u(%0/stats`health`temp)]/[u(%0/stats`health`real)], 22)][ljust(Chakra: [u(%0/stats`chakra`real)], 22)][ljust(Stamina: [u(%0/stats`stamina`real)], 22)]
 
-&title`skills Sheet Master = center([ansi(hy, ~)] [ansi(hw, Skills)] [ansi(hy, ~)], width(%#), [ansi(hm, -=~~~=-)])
+&FN`GETSKILLS Sheet Master=[menu(sectionsplit, Attacks)]%r[u(fn`getattacks, %0)]%r[menu(sectionsplit, Defenses)]%r[u(fn`getdefenses, %0)]%r[menu(sectionsplit, Transformations)]%r[u(fn`gettransformations, %0)]
 
-&title`stat Sheet Master = center([ansi(hy, ~)] [ansi(hw, Stats)] [ansi(hy, ~)], width(%#), [ansi(hg, -=~~~=-)])
+&FN`GETSTATS Sheet Master=[table(Mind: [u(%0/stats`mind`real)]([u(%0/stats`mind`temp)]) Body: [u(%0/stats`body`real)]([u(%0/stats`body`temp)]) Spirit: [u(%0/stats`spirit`real)]([u(%0/stats`spirit`temp)]) Nin: [u(%0/stats`nin`real)]([u(%0/stats`nin`temp)]) Tai: [u(%0/stats`tai`real)]([u(%0/stats`tai`temp)]) Gen: [u(%0/stats`gen`real)]([u(%0/stats`gen`temp)]), 7, 50)]
 
-&title`meritflaws Sheet Master = center([ansi(hy, ~)] [ansi(hw, Merits and Flaws)] [ansi(hy, ~)], width(%#), [ansi(hc, -=~~~=-)])
+&FN`GETTRANSFORMATIONS Sheet Master=[u(fn`tableskills, %0, transformation)]
 
-&title`end Sheet Master = center([ansi(hy, ~)] [ansi(hw, End)] [ansi(hy, ~)], width(%#), [ansi(%0, -=~~~=--)])
-
-
-
-@@For the following, <skill name> should be written with periods (.) instead of spaces ( )
-@@ie: 'Falcon Punch' should be 'falcon.punch' Proper formatting is as it sounds.
-
-&skill`<skill name>`rank Sheet Master = <S, A, B, C, D, E> @@S is the highest rank while E is the lowest for now.
-
-&skill`<skill name>`name Sheet Master = <skill name properly formatted>
-
-&skill`listings Sheet Master = <A list of all the skills formatted like the above <skill name>
-
-
-
-@@The following code goes on the Players!
-
-&sheet`skillslist <player dbref> = <A list of all the skills a player has formatted like the above <skill name>
-
-&sheet`skill`<skill name>`rank <player dbref> = <1, 2, 3, 4> @@1 is the lowest, 4 is the highest
-
-&sheet`stats`<stat name>`temp <player dbref> = <##> @@This is the temporary stat.
-
-&sheet`stats`<stat name>`real <player dbref> = <##> @@This is the actual stat.
+&FN`TABLESKILLS Sheet Master=[table([sort([iter([u(%0/skills`%1)],[get(%i0/rank)]: [name(%i0)] ([get(%0/skills`%1`%i0)]),,\,)], i,\,,\,)], 38, 78,\,)]
