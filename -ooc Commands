@@ -1,0 +1,28 @@
+Code for OOC object
+
+--Clear Options--
+
+&CMD`CLEAR`OOCALL OOC-Object=$-ooc/clear:[nspemit(%#,[header(game)] You have cleared both your ooc header and your OOC Say!)];[attrib_set(%#/ooc_says)];[attrib_set(%#/ooc_header)]
+&CMD`CLEAR`OOCHEAD OOC-Object=$-ooc/header: [nspemit(%#, [header(game)] You have cleared your ooc header!)];[attrib_set(%#/ooc_header)]
+&CMD`CLEAR`OOCSAY OOC-Object=$-ooc/say: [nspemit(%#,[header(game)] You have cleared your OOC Say!)];[attrib_set(%#/ooc_says)]
+
+--Help--
+
+&CMD`HELP OOC-Object=$-ooc/help:[nspemit(%#,[prettyPrint([u(describe)])])]
+&CMD`HELP0 OOC-Object=$-ooc:[u(cmd`Help)]
+&CMD`HELP2 OOC-Object=$-ooc/?:[u(cmd`Help)]
+&DESCRIBE OOC-Object=[center([ansi(hy, +)] [ansi(hw, OOC Help)] [ansi(hy, +)], width(%#), [ansi(hb, -=^=-)])]%rThis is the OOC Help File. Using the following commands, you can customize your OOC Chat and distinguish yourself from others! See +colors2/help to see how to use color.%r%r-ooc/say <thing>: This will change your ooc say to <thing>. If you do not include <thing>, your OOC will default to "says". For example, if you typed "-ooc/say yells", your ooc would look like <<OOC>> Test yells, "Hello"%r%r-ooc/header <thing>: This is the same as -ooc/say, but it changes your OOC Header. Please follow format and place it in angle brackets. Typing -ooc/header by itself will remove your header.%r%r-ooc/clear: This will clear both your ooc header and your OOC Say.%r%r[center([ansi(hy, +)] [ansi(hw, End Help)] [ansi(hy, +)], width(%#), [ansi(hb, -=^=-)])]
+
+--OOC Command--
+
+&CMD`OOC OOC-Object=$ooc *:[nsremit(%L,[if(hasattr(%#,ooc_header),get_eval(%#/ooc_header),u(ooc_header))]%b[moniker(%#)][switch(mid(%0,0,1),:,%b[delete(%0,0,1)],;,[delete(%0,0,1)],%b[if(hasattr(%#,ooc_says),get_eval(%#/ooc_says),u(ooc_says))]\, "{%0}")])]
+
+--Set Options--
+
+&CMD`SET`OOCHEAD OOC-Object=$-ooc/header *:[attrib_set(%#/ooc_header,[escape(%0)])];[nspemit(%#,[header(game)] You have changed your header to: %0)]
+&CMD`SET`OOCSAY OOC-Object=$-ooc/say *:[attrib_set(%#/ooc_says,[escape(%0)])];[nspemit(%#,[header(game)] You have changed your OOC Say to: %0)]
+
+--Default Options--
+
+&OOC_HEADER OOC-Object=[ansi(+white,<)][ansi(+plum,<)][ansi(+blueviolet,OOC)][ansi(+plum,>)][ansi(+white,>)]
+&OOC_SAYS OOC-Object=says
