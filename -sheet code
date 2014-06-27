@@ -16,6 +16,12 @@ Stuff on the Sheet Master
 
 &CMD`TRANSFORMATIONS Sheet Master=$-sheet/transformations: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Transformations)]%r[u(fn`gettransformations, %q0)]%r[menu(helpfiles, End Transformations)])]
 
+&cmd`view Sheet Master = $-sheet/view *: [if([orflags(%#, WrJ)], {[setq(0,[udefault([pmatch(*%0)]/sheetnum, #17)], 1, [pmatch(*%0)])][switch(1, [strmatch(#-1, %q1)], [nspemit(%#, [header(game)] Non-existent player name: %0)], [strmatch(#-2, %q1)], [nspemit(%#, [header(game)] Ambiguous player name: %0)], [nspemit(%#, [menu(helpfiles, [name(%q1)]'s Character Sheet)]%r[menu(greensplit, Stats)]%r[u(fn`gethealth, %q0)]%r[u(fn`getstats, %q0)]%r[menu(greensplit, Skills)]%r[u(fn`getskills, %q0)][menu(helpfiles, End Sheet)])])]}, [nspemit(%#, You are not permitted to do that!)])]
+
+&cmd`sheet Sheet Master = $-sheet: [setq(0,[udefault(%#/sheetnum, #17)])][nspemit(%#, [menu(helpfiles, Character Sheet)]%r[menu(greensplit, Stats)]%r[u(fn`gethealth, %q0)]%r[u(fn`getstats, %q0)]%r[menu(greensplit, Skills)]%r[u(fn`getskills, %q0)][menu(helpfiles, End Sheet)])]
+
+&cmd`share Sheet Master = $-sheet/share *: [setq(0,[udefault(%#/sheetnum, #17)], 1, [pmatch(*%0)])][switch(1, [strmatch(#-1, %q1)], [nspemit(%#, [header(game)] Non-existent player name: %0)], [strmatch(#-2, %q1)], [nspemit(%#, [header(game)] Ambiguous player name: %0)], [nspemit(%q1, [menu(helpfiles, %n's Character Sheet)]%r[menu(greensplit, Stats)]%r[u(fn`gethealth, %q0)]%r[u(fn`getstats, %q0)]%r[menu(greensplit, Skills)]%r[u(fn`getskills, %q0)][menu(helpfiles, End Sheet)])][nspemit(%#, [header(game)] You shared your sheet with [name(%q1)])])]
+
 --Basic Help File--
 
 &DESCRIBE Sheet Master=[menu(helpfiles, +Sheet Help)]%r[prettyprint(-sheet: See your sheet%r-sheet/share <name>: share your sheet%r-sheet/stats: see only your stats%r-sheet/skills: see only your skills%r-sheet/<attacks/defenses/transformations>: See only your attacks/defenses/transformations)]%r[menu(helpfiles, End Help)]
