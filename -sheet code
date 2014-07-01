@@ -40,3 +40,14 @@ Stuff on the Sheet Master
 &FN`GETTRANSFORMATIONS Sheet Master=[u(fn`tableskills, %0, transformation)]
 
 &FN`TABLESKILLS Sheet Master=[table([sort([iter([u(%0/skills`%1)],[get(%i0/rank)]: [name(%i0)] ([get(%0/skills`%1`%i0)]),,\,)], i,\,,\,)], 38, 78,\,)]
+
+
+
+--Skill/Stat Modifiers--
+&UTILITY`STATMOD Sheet Master=[if([member(v(validstats), %1)], [setq(0, [pmatch(%0)], 1, [get([pmatch(%0)]/sheetnum)])][if([orflags(%#, WrJ)], [setq(2, [add([get(%q1/stats`%1`%2)], %3)])][if([strmatch(health, %1)], [setq(max, 9999)], [setq(max, 10)])][switch(1, [lte(%q2, 0)], [attrib_set(%q1/stats`%1`%2, 0)], [gte(%q2, %q<max>)], [attrib_set(%q1/stats`%1`%2, %q<max>)], [attrib_set(%q1/stats`%1`%2, %q2)])])][nspemit(%#, [name(%q0)] now has [get(%q1/stats`%1`%2)] %2 %1.)], [nspemit(%#, Invalid Stat Reference)])]
+
+&UTILITY`statset Sheet Master=[if([member(v(validstats), %1)], [setq(0, [pmatch(%0)], 1, [get([pmatch(%0)]/sheetnum)])][if([orflags(%#, WrJ)], [if([strmatch(health, %1)], [setq(max, 9999)], [setq(max, 10)])][switch(1, [lte(%3, 0)], [attrib_set(%q1/stats`%1`%2, 0)], [gte(%3, %q<max>)], [attrib_set(%q1/stats`%1`%2, %q<max>)], [attrib_set(%q1/stats`%1`%2, %3)])])][nspemit(%#, [name(%q0)] now has [get(%q1/stats`%1`%2)] %2 %1.)], [nspemit(%#, Invalid Stat Reference)])]
+
+&UTILITY`skillmod Sheet Master = [if([member([v(validskilltype)], %1)], [setq(0, [pmatch(%0)], 1, [get([pmatch(%0)]/sheetnum)], 2, [lsearch(all, thing, %2)])][if([gt([words(%q2)], 1)], [nspemit(%#, Vague Reference. Please look at [iter(%q2, %i0: [name(%i0)], ,\,%b)])], [setq(3, [add([get(%q1/skills`%1`%q2)], %3)])][switch(1, [lte(%q3, 0)], [attrib_set(%q1/skills`%1`%q2, 0)], [gte(%q3, 4)], [attrib_set(%q1/skills`%1`%q2, 4)], [attrib_set(%q1/skills`%1`%q2, %q3)])][nspemit(%#, [name(%q0)] now has Level [get(%q1/skills`%1`%q2)] Mastery in %q2: [name(%q2)])])], [nspemit(%#, Invalid Skill Type!)])]
+
+&UTILITY`skillset Sheet Master = [if([member([v(validskilltype)], %1)], [setq(0, [pmatch(%0)], 1, [get([pmatch(%0)]/sheetnum)], 2, [lsearch(all, thing, %2)])][if([gt([words(%q2)], 1)], [nspemit(%#, Vague Reference. Please look at [iter(%q2, %i0: [name(%i0)], ,\,%b)])], [switch(1, [lte(%3, 0)], [attrib_set(%q1/skills`%1`%q2, 0)], [gte(%3, 4)], [attrib_set(%q1/skills`%1`%q2, 4)], [attrib_set(%q1/skills`%1`%q2, %3)])][nspemit(%#, [name(%q0)] now has Level [get(%q1/skills`%1`%q2)] Mastery in %q2: [name(%q2)])])], [nspemit(%#, Invalid Skill Type!)])]
