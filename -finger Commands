@@ -1,0 +1,86 @@
+&DESCRIBE Finger Object=[menu(customcolor, -finger Help, +blue)]%r[prettyprint({-finger <Name>: Show the basic player info. This would be Name, Alias, Location, Gender, and Connection Info.%r%r-finger/ic <Name>: Show the IC Finger info of a person. This includes the Character's Full Name, Rank, Birthday and Age, Place of Origin, Affiliation, and a [ansi(u, brief)]  description.%r%r-finger/ooc <Name>: OOC Finger info of a person. This includes RP Preference (the kind of scene you want), Timezone, and RP Hours. You could also have a link to a picture/wiki page, Alts, and Extra Notes%r%r-finger/setup: Start setting up custom IC and OOC finger fields! Note: You still can -finger a person and see information, even if they don't have theirs customized. (See -finger/setup-help for details)%r%r-finger/notify <IC/OOC/Basic/All>: Toggle whether or not you'll receive notifications for being -fingered (IC, OOC, Basic, or all of the above.)})]%r[menu(customcolor, End Help, +blue)]
+
+
+&cmd`help finger=$^\-finger/(\?|help)+$: [pemit(%#, [u(me/desc)]
+
+&cmd`basic finger=$-finger *:[setq(0, [pmatch(%0)])][switch(%q0, #-1, [pemit(%#, No Such Player: %0)], #-2, Ambiguous Player Name: %0, [pemit(%#, [menu(customcolor,[name(%q0)]'s[if([hasattrval(%q0, alias)],%b([alias(%q0)]))] Finger Info,+yellow3)]%r[u(finger`basic, %q0)]%r[menu(customcolor,End Finger,+yellow3)])][if([member([get(%q0/notify)], basic)], [pemit(%q0, [header(game)] %n just looked at your -finger.)])])]
+
+&finger`basic Finger=[ljust(Gender: [u(fn`getsex, %0)], 10)][rjust(Location: [if([or([and([orflags(%q0, WrJ)], [hasflag(%q0, U)])], [hasflag([loc(%q0)], U)])],N/A, [name([loc(%q0)])][switch([zone([loc(%q0)])], #-1,,%b%[[name([zone([loc(%q0)])])]])])], [sub([width(%#)], 10)])]%r[u(fn`getconnect, %0)]
+
+###[if([v(%0/OOCNotify)], [pemit(%0, [header(game)] %n has checked your -finger/ic.)])]
+
+&fn`getsex Finger=[switch([subj(%0)], he, [ansi(+blue1, M)], she, [ansi(+deeppink3, F)], [ansi(+darkgrey, N)])]
+
+&fn`getconnect Finger=[switch([idle(%0)], -1, [u(msg`disconnected, %0)], [if([hasflag(%0, D)], [if([orflags(%#, WrJ)], [u(msg`connected, %0)], [u(msg`disconnected, %0)])], [u(msg`connected, %0)])]
+
+&msg`disconnected finger=[ljust([ansi(+red, Last Connected:)],16)][rjust([xget(%0, lastlogout)],15)]%r[ljust([ansi(+red, Last Logout:)],16)][rjust([xget(%0, last)],15)]
+
+&msg`connected finger=[center([ansi(+green, Connected!)], [width(%#)])]%r[ljust(Connected For:, [div([width(%#)], 4)])][rjust([timestring([conn(%0)])], 10)] [space([div([width(%#)], 5)])][ljust(Idle For:, [div([width(%#)], 4)])][rjust([timestring([idle(%0)])], 10)]
+
+&cmd`ic finger=$-finger/ic *: [setq(0, [pmatch(%0)], 1, [xget([pmatch(%0)], fingernum)])][switch(%q0, #-1, [pemit(%#, No Such Player: %0)], #-2, Ambiguous Player Name: %0, [pemit(%#, [menu(customcolor,[name(%q0)]'s[if([hasattrval(%q0, alias)],%b([alias(%q0)]))] IC Finger Info,+yellow3)]%r[u(finger`ic, %q1)]%r[menu(customcolor,End Finger,+yellow3)])][if([member([get(%q0/notify)], ic)], [pemit(%q0, [header(game)] %n just looked at your -finger/ic.)])])]
+
+&finger`ic finger=[ljust([ansi(hw, Full Name:)] [default(%0/fullname, N/A)], 35,,1)][ljust([ansi(hw, Rank:)] [default(%0/rank, None)],15)][rjust([u(fn`getbirthday, %0)],[sub([width(%#)], 50)])]%r[ljust([ansi(hw, Native Land:)] [default(%0/origin, None)], 30)][rjust([ansi(hw, Affiliation:)] [default(%0/affiliate, None)], [sub([width(%#)], 30)])][if([hasattrval(%0, desc)], %r%r[ansi(hw, Brief Description:)] [xget(%0, desc)])]
+
+&fn`getbirthday finger=[ansi(hw, Birthday:)] [default(%0, birthday, N/A)] ([default(%0/age, N/A)][switch(1,[not([hasattrval(%0, age)])],,[isint([get(%0/age)])],,[eq([get(%0/age)], 1)],%byear, %byears)])
+
+
+&cmd`ooc finger=$-finger/ooc *: [setq(0, [pmatch(%0)], 1, [xget([pmatch(%0)], fingernum)])][switch(%q0, #-1, [pemit(%#, No Such Player: %0)], #-2, Ambiguous Player Name: %0, [pemit(%#, [menu(customcolor,[name(%q0)]'s[if([hasattrval(%q0, alias)],%b([alias(%q0)]))] OOC Finger Info,+yellow3)]%r[u(finger`ooc, %q1)]%r[menu(customcolor,End Finger,+yellow3)])][if([member([get(%q0/notify)], ooc)], [pemit(%q0, [header(game)] %n just looked at your -finger/ooc.)])])]
+
+&finger`ooc finger=[ljust([ansi(+white, RP Preference:)] [default(%0/prefer, Undecided/Open)], 30)][rjust([ansi(+white, Timezone:)] [default(%0/timezone, Not Set)], [sub([width(%#)],30)])]%r[if([hasattrval(%0, alts)], [ansi(+white, Alts:)] [get(%0/alts)]%r)][ansi(+white, RP Hours:)] [default(%0/rphours, Not Set)][if([hasattrval(%0, wiki)], %r[ansi(+white, Picture/Wiki:)] [get(%0/wiki)])][if([hasattrval(%0, note)], %rOther Notes: [get(%0/note)])]
+
+
+&cmd`setup finger=$-finger/setup: [if([hasattrval(%#, fingernum)], [pemit(%#, [header(game)] You shouldn't type that! You have your finger info already setup. You need to fill in the fields using -finger/set <Field>=<Value>)], [setq(0, [create(%n's Finger Object)])][parent(%q0, #133)][attrib_set(%#/fingernum, %q0)][set(%#/fingernum, w)][attrib_set(%#/notify, ooc ic basic)][set(%#/notify, w)][attrib_set(%q0/playernum, %:)][tel(%q0, #28)][pemit(%#, [header(game)] You now can set up your custom OOC/IC finger information! Look at -finger/setup-help for details.)])]
+
+notify = ooc ic basic
+
+&CMD`NOTIFY Finger Object=$^\-finger/notify (IC|OOC|basic|all)$: [switch(%1, ooc, [u(fn`toggle, ooc, %#)][pemit(%#, [header(finger)] You toggled your OOC Finger notification [if(member(get(%#/notify), %1), on, off)].)], ic, [u(fn`toggle, ic, %#)][pemit(%#, [header(finger)] You toggled your IC Finger notification [if(member(get(%#/notify), %1), on, off)].)], basic, [u(fn`toggle, basic, %#)][pemit(%#, [header(finger)] You toggled your basic Finger notification [if(member(get(%#/notify), %1), on, off)].)], all, [u(fn`toggle, all, %#)][pemit(%#, [header(finger)] You toggled all your Finger notifications [if(hasattrval(%#/notify), on, off)].)], [pemit(%#, [header(finger)] Invalid type. Choose from IC\, OOC\, basic\, or all.)])]
+
+&FN`TOGGLE Finger Object=[switch(%0, ooc, [attrib_set(%1/notify, [if([member([get(%1/notify)], ooc)], [remove([get(%1/notify)], ooc)], [setunion([get(%1/notify)],ooc)])])], ic, [attrib_set(%1/notify, [if([member([get(%1/notify)], ic)], [remove([get(%1/notify)], ic)], [setunion([get(%1/notify)],ic)])])], basic, [attrib_set(%1/notify, [if([member([get(%1/notify)], basic)], [remove([get(%1/notify)], basic)], [setunion([get(%1/notify)],basic)])])], all, [attrib_set(%1/notify, [if([hasattrval(%1/notify)], [attrib_set(%1/notify)],ooc ic basic)])])])]
+
+
+
+Setup Help:
+&cmd`setup`help finger= $-finger/setup-help:[pemit(%#, [menu(customcolor, -finger Setup Help, +blue)]%r[prettyprint({IC Finger Info:%r-finger/setup [ansi(y, Name)]=<Full Name>: Set your character's Full Name (format of last - first, preferably)%r-finger/setup [ansi(y, desc)]=<short desc>: Set a /brief/ description of your character. It should not be more than 250 characters long.%r%rOOC Finger Info:%r-finger/setup [ansi(y, zone)]=<Time Zone>: Set your timezone!%r-finger/setup [ansi(y, rp pref)]=<RP Preference>: What do you want? A social? Mission? Training Scene? Or anything?%r-finger/setup [ansi(y, hours)]=<RP Hours>: When can you RP? From X to X on Days Y and Z?%r-finger/setup [ansi(y, wiki)]=<Link>: Put a picture of your character or link to a page concerning your character.%r-finger/setup [ansi(y, notes)]=<Note>: Just something here that you feel doesn't fit anywhere else.%r-finger/setup [ansi(y, alts)]=<Alts List>: Tell us who else you are! ... Or don't.%r%rTyping any of the commands without an =<Stuff> will reset the field. Type -finger/reset to clear /all/ of the fields (both IC and OOC).})]%r[menu(customcolor, End Help, +blue)])]
+
+&cmd`reset finger=$-finger/reset:[setq(0, [get(%#/fingernum)])][iter([v(list`fields)], [attrib_set(%q0/%i0)])][pemit(%#, [header(finger)] You have reset all your finger fields!)]
+
+&list`fields finger=fullname desc prefer timezone alts rphours wiki notes
+
+IC Setup:
+&cmd`setup`name finger=$-finger/setup name=*:[attrib_set([get(%#/fingernum)]/fullname, %0)][pemit(%#, [header(finger)] You have set your full name to: %0)]
+&cmd`setup`desc finger=$-finger/setup desc=*:[if([lte([strlen({%0})], 250)], [attrib_set([get(%#/fingernum)]/desc, %0)][pemit(%#, [header(finger)] You have set your brief description.)], [pemit(%#, [header(finger)] Your brief desc is too long. Please make it under 250 characters.)])]
+
+&cmd`reset`name finger=$-finger/setup name:[attrib_set([xget(%#, fingernum)]/fullname)][pemit(%#, [header(finger)] You have reset your full name.)]
+&cmd`reset`desc finger=$-finger/setup desc:[attrib_set([get(%#/fingernum)]/desc)][pemit(%#, [header(finger)] Your brief desc is now blank.)]
+
+
+OOC Setup:
+&cmd`setup`pref finger=$-finger/setup rp pref=*:[attrib_set([get(%#/fingernum)]/prefer, %0)][pemit(%#, [header(finger)] You have set your RP Preference to: %0)]
+&cmd`setup`timezone finger=$-finger/setup zone=*:[attrib_set([get(%#/fingernum)]/timezone, %0)][pemit(%#, [header(finger)] You have set your timezone to: %0)]
+&cmd`setup`alts finger=$-finger/setup alts=*:[attrib_set([get(%#/fingernum)]/alts, %0)][pemit(%#, [header(finger)] You have set your alts list to: %0)]
+&cmd`setup`hours finger=$-finger/setup hours=*:[attrib_set([get(%#/fingernum)]/rphours, %0)][pemit(%#, [header(finger)] You have set your RP Hours to: %0)]
+&cmd`setup`wiki finger=$-finger/setup wiki=*:[attrib_set([get(%#/fingernum)]/wiki, %0)][pemit(%#, [header(finger)] You have set your wiki/picture to: %0)]
+&cmd`setup`notes finger=$-finger/setup notes=*:[attrib_set([get(%#/fingernum)]/notes, %0)][pemit(%#, [header(finger)] You have set your notes to: %0)]
+
+&cmd`reset`pref finger=$-finger/setup rp pref:[attrib_set([get(%#/fingernum)]/prefer)][pemit(%#, [header(finger)] You have reset your RP Preference.)]
+&cmd`reset`timezone finger=$-finger/setup zone:[attrib_set([get(%#/fingernum)]/timezone)][pemit(%#, [header(finger)] You have reset your timezone.)]
+&cmd`reset`alts finger=$-finger/setup alts:[attrib_set([get(%#/fingernum)]/alts)][pemit(%#, [header(finger)] You have reset your alts list.)]
+&cmd`reset`hours finger=$-finger/setup hours:[attrib_set([get(%#/fingernum)]/rphours)][pemit(%#, [header(finger)] You have reset your RP Hours.)]
+&cmd`reset`wiki finger=$-finger/setup wiki:[attrib_set([get(%#/fingernum)]/wiki)][pemit(%#, [header(finger)] You have reset your wiki/picture.)]
+&cmd`reset`notes finger=$-finger/setup notes:[attrib_set([get(%#/fingernum)]/notes)][pemit(%#, [header(finger)] You have reset your notes.)]
+
+
+
+Basic Info: Charbit Name, Alias, Gender, Location, Connected (Time & Idle time or Last Connected)
+IC Finger Info: Name, Age, Rank, Native Land, Affiliation, Brief Desc
+OOC Finger Info: RP Hours & Timezone, RP Preference (Social/Mission/Training/Other), Note, Picture & Wiki, Alts
+Finger Notifier
+
+Full Name, Birthday, Affiliation, Desc, and all the OOC stuff should be customized.
+
+-finger/notify
+Finger Notification (Toggle)
+
+Needed: -finger/setup (creates the finger info object), -finger/set <Field>=<Thing>
+
+-time
