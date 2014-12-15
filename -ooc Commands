@@ -15,12 +15,12 @@ Code for OOC object
 
 --OOC Command--
 
-&CMD`OOC OOC-Object=$ooc *:[nsremit(%L,[if(hasattr(%#,ooc_header),get_eval(%#/ooc_header),u(ooc_header))]%b[moniker(%#)][switch(mid(%0,0,1),:,%b[delete(%0,0,1)],;,[delete(%0,0,1)],%b[if(hasattr(%#,ooc_says),get_eval(%#/ooc_says),u(ooc_says))]\, "{%0}")])]
+&CMD`OOC OOC-Object=$ooc *:[nsremit(%L,[if(hasattr(%#,ooc_header),get_eval(%#/ooc_header),u(ooc_header))]%b[speak(&[moniker(%#)], %0, [default(%#/ooc_says, says)]\,)])]
 
 --Set Options--
 
 &CMD`SET`OOCHEAD OOC-Object=$-ooc/header *:[attrib_set(%#/ooc_header,[escape(%0)])];[nspemit(%#,[header(game)] You have changed your header to: %0)]
-&CMD`SET`OOCSAY OOC-Object=$-ooc/say *:[attrib_set(%#/ooc_says,[escape(%0)])];[nspemit(%#,[header(game)] You have changed your OOC Say to: %0)]
+&CMD`SET`OOCSAY OOC-Object=$-ooc/say *:[attrib_set(%#/ooc_says, %0)];[nspemit(%#,[header(game)] You have changed your OOC Say to: %0)]
 
 --Default Options--
 
