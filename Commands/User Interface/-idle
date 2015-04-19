@@ -1,0 +1,11 @@
+@@ Idle Command (#40)
+@create Idle Command
+@link Idle Command = #13
+@set Idle Command = WIZARD
+&CMD Idle Command=
+&CMD`HELP Idle Command=$-idle/help: [nspemit(%#, [u(desc)])]
+&CMD`HELP2 Idle Command=$-idle/?: [nspemit(%#, [u(desc)])]
+&CMD`IDLECLEAR Idle Command=$-idle: [nspemit(%#,[if(hasattrval(%#, idle), {[attrib_set(%#/IDLE)][null(u(#6/cmd`ooc, :comes back from idleness.)])]},[header(game)] You are not idle.)])]
+&CMD`IDLESET Idle Command=$-idle *:[null([u(#6/cmd`ooc, :goes idle. Reason: %0)])][attrib_set(%#/idle, %0)]
+&DESCRIBE Idle Command=[menu(customcolor, -Idle Command Help, hb)]%r[prettyprint(-idle: Clear your idleness.%r-idle <Reason>: Go idle for a certain <reason>)]%r[menu(customcolor, End Help, hb)]
+@set Idle Command/DESCRIBE=no_command visual prefixmatch public nearby

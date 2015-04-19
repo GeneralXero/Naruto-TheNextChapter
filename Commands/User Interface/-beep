@@ -1,0 +1,26 @@
+@@ Beeper (#82)
+@create Beeper
+@link Beeper = #13
+@set Beeper = WIZARD
+@set Beeper = SAFE
+@set Beeper = ROYALTY
+&CMD Beeper=
+&CMD`BEEPED Beeper=if([u(fn`IsNotFail)],[setq(LastBeep,sub([u(fn`NowSec)],[u(fn`GetLastBeep)]))] [if(lt(%q<LastBeep>,180),[setq(Fail, [u(fn`GetName)] was beeped recently ([timestring(%q<LastBeep>)]). Please Wait a few minutes before trying again.)])][u(fn`GetFail)])
+&CMD`DOBEEP Beeper=if([u(fn`IsNotFail)],[attrib_set(%q<Player>/LastBeep,[time()])][nsPemit(%q<Player>, [header(game)] [moniker(%#)] has beeped you! ([if(gt(words(%0),0),%0,See what they want!)]) [beep(1)] )][nsPemit(%#,[header(game)] You have beeped [u(fn`GetName)][if(gt(words(%0),0),%bwith (%0))]!)])
+&CMD`FINDPLAYER Beeper=[setq(Player,[pmatch(%0)])][Case(%q<Player>,#-1, [setq(Fail, Player (%0) not Found!)],#-2, [setq(Fail,Unable to Find the right Player (%0))],if(eq([conn(%q<Player>)],-1),[setq(Fail,[u(fn`GetName)] is not logged in!)]))][u(fn`GetFail)]
+&CMD`HELP Beeper=$-beep/help:[nspemit(%#,[prettyPrint([u(describe)])])]
+&CMD`HELP0 Beeper=$-beep:[u(cmd`Help)]
+&CMD`HELP2 Beeper=$-beep/?:[u(cmd`Help)]
+&CMD`ISIDLE Beeper=if([u(fn`IsNotFail)],[setq(IsIdle,[hasattrval(%q<Player>,idle)])] [if(gt(%q<IsIdle>,0), setq(Fail, Player ([u(fn`GetName)]) is @Idle%, Idle Message ([u(fn`GetIdleMsg)])))][u(fn`GetFail)])
+&CMD`RUNBEEP Beeper=$-beep *:[u(cmd`findPlayer, %0)][u(cmd`isIdle)][u(cmd`beeped)][u(cmd`DoBeep)]
+&CMD`RUNBEEP2 Beeper=$-beep/custom *=*:[u(cmd`findPlayer, %0)][u(cmd`isIdle)][u(cmd`beeped)][u(cmd`DoBeep,%1)]
+&DESCRIBE Beeper=[menu(customcolor,-Beep Help,+blue)]%r-beep <Player>%r%tSends a Generic (See What They Want) message along with a system beep.%r-beep/custom <Player>=<Custom Message>%r%tSends a Custom message along with a system beep.%r%t%r-beep/help%r%tShows the beeper help%r[menu(customcolor,End -Beep Help,+blue)]
+@set Beeper/DESCRIBE=no_command visual prefixmatch public nearby
+&FN Beeper=
+&FN`GETFAIL Beeper=[if([u(fn`IsFail)],[nsPemit(%#, [header(game)]: %q<Fail>)])]
+&FN`GETIDLEMSG Beeper=[xget(%q<Player>,idle)]
+&FN`GETLASTBEEP Beeper=if([hasattrval(%q<Player>,LastBeep)],[convTime(xget(%q<Player>,LastBeep))],[sub([u(fn`NowSec)],180)])
+&FN`GETNAME Beeper=[moniker(%q<Player>)]
+&FN`ISFAIL Beeper=[gt([strlen(%q<Fail>)],0)]
+&FN`ISNOTFAIL Beeper=[eq([strlen(%q<Fail>)],0)]
+&FN`NOWSEC Beeper=[convtime(time())]

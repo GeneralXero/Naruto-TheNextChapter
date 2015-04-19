@@ -1,0 +1,32 @@
+@@ Room Builder Object (#41)
+@create Room Builder Object
+@link Room Builder Object = #2
+@lock/Command Room Builder Object=ISBUILDER/1
+@lset Room Builder Object/Command=no_inherit
+@set Room Builder Object = WIZARD
+@set Room Builder Object = SAFE
+@power Room Builder Object = Builder
+&CMD Room Builder Object=
+&CMD`ALIASEXIT Room Builder Object=$-build/eAlias *=*: [setq(0,[locate(%#,%0,eE)])][if(isdbref(%q0),[alias(%q0,strcat(fullalias(%q0),;%1))][nspemit(%#,[header(builder)] Alias(es) added to Exit [moniker(%q0)](%q0) )],[nspemit(%#, [header(builder)] Unable to find exit (%0)!)] )]
+&CMD`AUTOALIASEXIT Room Builder Object=$-build/autoexit *:[setq(0,[locate(%#,%0,eE)])][if(isdbref(%q0),[alias(%q0,trim(strcat([u(cmd`BuildAlias,[default(%q0/default,)])],;,[u(cmd`BuildAlias2,name(%q0))]),;))][nspemit(%#,[header(builder)] Auto-Aliased Exit [moniker(%q0)](%q0) )],[nspemit(%#, [header(builder)] unable to find exit (%0)!)])]
+&CMD`AUTOALIASEXIT2 Room Builder Object=$-build/autoAlias *:[u(CMD`AUTOALIASEXIT,%0)]
+&CMD`BUILD Room Builder Object=$-build *: [setq(0,[dig(%0)])]; @chown/preserve %q0=#39; [tel(%#,%q0)]
+&CMD`BUILDALIAS Room Builder Object=[switch(%0, North,N;Nor;Nort;North;8 ,Northeast,NE;NorthE;Northeast;nEast;9 ,East,E;Ea;Eas;East;6 ,Southeast,SE;SouthE;Southeast;sEast;3 ,South,S;So;Sou;Sout;South;5 ,Southwest,SW;SouthW;SouthWest:sWest;1 ,West,W;We;Wes;West;4 , Northwest,NW;NorthW;NorthWest;nWest;7 ,Up,U;Up;+ ,Down, D;do;dow;down;- ,Out,O;Ou;Out)]
+&CMD`BUILDALIAS2 Room Builder Object=[left(%0,1)][right(%0,1)][if(gt(words(%0),1),\;[iter(%0,left(##,1),,)]\;[edit(%0,%b,)],\;%0)]
+&CMD`BUILDEXIT Room Builder Object=$-build/exit *=*:[if(isdbref(%1),[setq(0,u(cmd`BuildAlias2,%0))][setq(1,[open(%0;%q0,%1)])][setq(2,Created Exit Name: %0 (%q1) %tLink Target: %1%tAuto-Alias:%q0)][tel(%q1,%l)],[setq(2,Failed to Create Exit Name: %0 (%q1) %tLink Target: %1%tAuto-Alias:%q0 Check your Target DbRef)])][nspemit(%#,[header(builder)] %q2)];@chown/preserve %q1=#39;
+&CMD`CREATEPARENT Room Builder Object=$-build/createParent *:[setq(0,[Create([cat(%0,Room Parent)])])] [if(isDbRef(%q0),[[null([parent(%q0,#49)])][link(%q0,#27)][tel(%q0,#27)][nspemit(%#,[header(builder)] Created New Room Parent %[[moniker(%q0)](%q0))]%]],[nspemit(%#,[header(builder)] Failed to Create New Room Parent (%0) )])];@chown/preserve %q0=#39;
+&CMD`CREATEZONE Room Builder Object=$-build/createZone *:[setq(0,[Create([cat(%0,Zone)])])] [if(isDbRef(%q0),[null([parent(%q0,#38)])][link(%q0,#27)][tel(%q0,#27)][nspemit(%#,[header(builder)] Created New Zone %[[moniker(%q0)](%q0)%])],[nspemit(%#,[header(builder)] Failed to Create New Zone (%0) )])];@chown/preserve %q0=#39;
+&CMD`EXITFIND Room Builder Object=$-build/exits: [setq(0,[lexits(%l)])][if([lt([words(%q0)],1)],[nspemit(%#, [header(builder)] Failed to Find any Exits%b please make one.)],[iter(%q0, nspemit(%#,[header(builder)] Exit Found:%b[ljust((%i0),7,%b,1)][ljust([moniker(%i0)]-~>([moniker(loc(%i0))])%b([loc(%i0)]),50,%b,0)][fullalias(%i0)]))])]
+&CMD`FINDROOM Room Builder Object=$-build/find *:[setq(0,[lsearch(all,room,%0)])][iter(%q0, nspemit(%#,[header(builder)] Room Found:%b[moniker(%i0)](%i0)%tZone:%b([moniker([zone(%i0)])])))]
+&CMD`HELP Room Builder Object=$-build:[u(cmd`Help1)]
+&CMD`HELP0 Room Builder Object=$-build/help:[u(cmd`Help1)]
+&CMD`HELP1 Room Builder Object=$-build/?:[nspemit(%#,[prettyPrint([u(describe)])])]
+&CMD`PARENT Room Builder Object=$-build/parent *: [setq(0,[lsearch(all, thing,%0)])]; [if([gt([words(%q0)],1)],[nspemit(%#, [header(builder)] Failed to Find a Parent Named%b<%0> please try again.)],[Parent(%l,%q0)])]
+&CMD`PARENTFIND Room Builder Object=$-build/parents: [setq(0,[lsearch(all, thing,Room Parent)])]; [iter(%q0, nspemit(%#,[header(builder)] Parent Found:%b[moniker(%i0)] (%i0))))]
+&CMD`RENAMEEXIT Room Builder Object=$-build/eName *=*: [setq(0,[locate(%#,%0,eE)])][if(isdbref(%q0),[setq(1,[moniker(%q0)])][name(%q0,[capstr(%1)])][nspemit(%#,[header(builder)] Exit %q1 (%q0) renamed to [moniker(%q0)] )],[nspemit(%#, [header(builder)] Unable to find exit (%0)!)] )]
+&CMD`SETDIRECTION Room Builder Object=$-build/direction *=*:[setq(0,[locate(%#,%0,eE)])][if(isdbref(%q0),[attrib_set(%q0/default,%1)][nspemit(%#,[header(builder)] Default Direction (%1) Set on Exit [moniker(%q0)](%q0) )],[nspemit(%#, [header(builder)] unable to find exit (%0)!)])]
+&CMD`ZONE Room Builder Object=$-build/zone *: [setq(0,[lsearch(all, thing,%0)])]; [if([gt([words(%q0)],1)],[nspemit(%#, [header(builder)] Failed to Find a Zone Named%b<%0> please try again.)],[zone(%l,%q0)])]
+&CMD`ZONEFIND Room Builder Object=$-build/zones: [setq(0,[lsearch(all, thing,zone)])]; [iter(%q0, nspemit(%#,[header(builder)] Zone Found:%b[moniker(%i0)] (%i0))))]
+&DESCRIBE Room Builder Object=Building Rooms%r%t-build <RoomName>%r%t%tBuilds a New room with the given name, and teleports you to it. It also sets all needed options.%r%t%t%t-build Creepy Basement%r%r%t-build/find <RoomName>%r%t%tFinds the room, gives the DBref.%r%t%t%t-build/find Creepy Basement%rExits:%r%t-build/AutoExit <ExitName>%r%t%tRebuilds Exit Aliases using the AutoAlias Builder%r%t%t%t-build/autoexit north%r%t-build/eAlias <ExitName>=<AppendAliases>(;Separated)%r%t%tAppend Alias to Exit%r%t%t%t-build/eAlias North=Shop;Store%r%t-build/Exits%r%t%tShows all exits in the room, their aliases, and where they link to.%r%t%t%t-build/Exits%r%t-build/Exit <ExitName>=<#Destination> (#DBref)%r%t%tCreate a new exit and link to the Destination%r%t%t%t-build/Exit North=#999%r%t-build/eName <ExitName>=<NewName>%r%t%tRename an Exit%r%t%t%t-build/eName Nirth=North%r%t-build/direction <ExitName>=<Direction>%r%t%tSet a Default Direction (used by AutoExit)%r%t%t(North,South,East,West,Up,Down,Out,Northeast,Northwest,Southeast,Southwest)%r%t%t%t-build/direction Shop=North%rParents:%r%t-build/Parents%r%t%tFind all Room Parents.%r%t%t%t-build/Parents%r%t-build/Parent <ParentName>%r%t%tChange current room's parent%r%t%t%t-build/Parent Master Room Parent%r%t-build/CreateParent <ParentName>%r%t%tCreate a New Room Parent%r%t%t%t-build/CreateParent Land of Hot sauce%r%t-build/Zones%r%t%tFind all Zones.%r%t%t%t-build/Zones%r%t-build/Zone <ZoneName>%r%t%tChange current room's Zone%r%t%t%t-build/Zone Deep Space%r%t-build/CreateZone <ZoneName>%r%t%tCreate a New Zone%r%t%t%t-build/CreateParent Land of Hot sauce%r
+@set Room Builder Object/DESCRIBE=no_command visual prefixmatch public nearby
+&ISBUILDER Room Builder Object=[haspower(%#,builder)]

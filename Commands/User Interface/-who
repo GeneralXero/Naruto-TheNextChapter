@@ -1,0 +1,28 @@
+@@ -who Command (#149)
+@create -who Command
+@link -who Command = #13
+@set -who Command = WIZARD
+&CMD -who Command=
+&CMD`STAFF -who Command=
+&CMD`STAFF`ALL -who Command=$-staff/all:[setq(0, [lsearch(all, type, player, flags, W)], 1, [lsearch(all, type, player, flags, r)], 2, [lsearch(all, type, player, flags, J)])][pemit(%#, [menu(customcolor, All Staff List, +blue)]%r[ljust([ansi(hwu, Pos)] [ansi(hwu, Name)], 24,,1)][ljust([ansi(hwu, Alias)], 6,, 1)][rjust([ansi(hwu, Connected)],10,,1)][space(3)][rjust([ansi(hwu, Idle)],4,,1)] [ljust([ansi(hwu, Duties)], 25,,1)]%r[iter(%q0 %q1 %q2, [u(fn`staff_format, %i0)],,%r)]%r[menu(customcolor, End Staff, +blue)]
+&CMD`STAFF`CONNECTED -who Command=$-staff:[setq(0, [lsearch(all, type, player, flags, Wc)], 1, [lsearch(all, type, player, flags, rc)], 2, [lsearch(all, type, player, flags, Jc)])][pemit(%#, [menu(customcolor, Connected Staff List, +blue)]%r[ljust([ansi(hwu, Pos)] [ansi(hwu, Name)], 24,,1)][ljust([ansi(hwu, Alias)], 6,, 1)][rjust([ansi(hwu, Connected)],10,,1)][space(3)][rjust([ansi(hwu, Idle)],4,,1)] [ljust([ansi(hwu, Duties)], 25,,1)]%r[iter(%q0 %q1 %q2, [u(fn`staff_format, %i0)],,%r)]%r[menu(customcolor, End Staff, +blue)]
+&CMD`WHO-IDLE -who Command=$-who/idle:[pemit(%#, [menu(customcolor, -who/idle List, +forestgreen)]%r[ljust([ansi(hwu, Sex)] [ansi(hwu, Name)], 20,,1)][ljust([ansi(hwu, Alias)], 6,, 1)][rjust([ansi(hwu, Connected)],10,,1)][space(3)][rjust([ansi(hwu, Idle)],4,,1)] [ljust([ansi(hwu, Location)], 20,,1)][rjust([ansi(hwu, Affiliation)], [sub([width(%#)], 64)])]%r[iter([setunion([lwho(%#)],,,idle)], [u(fn`village_format, %i0)],,%r)]%r[u(msg`key)]%r[menu(customcolor, End List, +forestgreen)])]
+&CMD_WHO -who Command=$-who:[pemit(%#, [menu(customcolor, -who List, +forestgreen)]%r[ljust([ansi(hwu, Sex)] [ansi(hwu, Name)], 20,,1)][ljust([ansi(hwu, Alias)], 6,, 1)][rjust([ansi(hwu, Connected)],10,,1)][space(3)][rjust([ansi(hwu, Idle)],4,,1)] [ljust([ansi(hwu, Location)], 20,,1)][rjust([ansi(hwu, Affiliation)], [sub([width(%#)], 64)],,1)]%r[iter([setunion([lwho(%#)],,,conn)], [u(fn`village_format, %i0)],,%r)]%r[u(msg`key)]%r[menu(customcolor, End List, +forestgreen)])]
+&CMD_WHO-VILLAGE -who Command=$-who/village:[pemit(%#, [menu(customcolor, -who/village List, +forestgreen)]%r[ljust([ansi(hwu, Sex)] [ansi(hwu, Name)], 20,,1)][ljust([ansi(hwu, Alias)], 6,, 1)][rjust([ansi(hwu, Connected)],10,,1)][space(3)][rjust([ansi(hwu, Idle)],4,,1)] [ljust([ansi(hwu, Location)], 20,,1)][rjust([ansi(hwu, Affiliation)], [sub([width(%#)], 64)])])][iter([sortkey(sort`village, [setunion([lwho(%#)],,,namei)], -i)], [pemit(%#, [u(fn`village_format, %i0)])],,%r)][pemit(%#, [u(msg`key)]%r[menu(customcolor, End List, +forestgreen)])])]
+&DESCRIBE -who Command=[menu(customcolor, -who Help, +blue)]%r[prettyprint({-who: show who is connected! Sorted by how long they've been connected (the longest connected is at the bottom of the list).%r%r-who/village: show who's connected and see what village they are affiliated with. Sorted alphabetically by Affiliation.%r%r-who/idle: show who's connected sorted by idle time. Most recently active is at the top!})]%r[menu(customcolor, End Help, +blue)]
+@set -who Command/DESCRIBE=no_command visual prefixmatch public nearby
+&FN -who Command=
+&FN`AFFIL -who Command=[setq(0, [get([get(%0/fingernum)]/affiliate)])][ansi([switch(%q0, Kumogakure, +yellow, Sunagakure, +sandybrown, Konohagakure, +springgreen, Kirigakure, +cadetblue2, Iwagakure, +saddlebrown, Rogue, +grey25, +grey62)], [if([t(%q0)], %q0, N/A)]
+&FN`CONNECTION -who Command=[etimefmt($zxd $2H:$2M, [conn(%0)])]
+&FN`FORMAT -who Command=[ljust([u(fn`gender, %0)] [u(fn`name, %0)], 20,,1)][ljust([alias(%0)], 6,, 1)][rjust([u(fn`connection, %0)],10,,1)][space(5)][rjust([u(fn`idle, %0)], 4,,1)][rjust([u(fn`loc, %0)], [sub([width(%#)], 45)])]
+&FN`GENDER -who Command=([switch([subj(%0)], he, [ansi(+blue1, M)], she, [ansi(+deeppink3, F)], [ansi(+darkgrey, N)])])
+&FN`IDLE -who Command=[edit([left([squish([etimefmt($zxd $xzh $zxm $xs, [idle(%0)])])], 3)], %b,)]
+&FN`LOC -who Command=[setq(0, [loc(%0)])][switch(1, [and([orflags(%0, WrJ)], [hasflag(%0, U)])], Unfindable, [name(%q0)] %(%q0))]
+&FN`NAME -who Command=[setq(0, [name(%0)], 1, [moniker(%0)])][switch(1, [hasattrval(%0, idle)], [ansi(+purple3, %q0)], [lte(900, idle(%0))], [ansi(+magenta3, %q0)], [hasflag(%0, W)], [ansi(+red, %q0)], [hasflag(%0, r)], [ansi(+green, %q0)], [hasflag(%0, J)], [ansi(+cyan, %q0)], [hasattrval(%0, moniker)], %q1, [ansi(c, %q0)])]
+&FN`STAFF_FORMAT -who Command=[switch(1, [hasflag(%0, W)], [ansi(+red, Wiz)], [hasflag(%0, r)], [ansi(+green, Roy)], [hasflag(%0, J)], [ansi(+cyan, Jud)])] [ljust([moniker(%0)], 20,,1)][ljust([alias(%0)], 6,,1)][if([hasflag(%0, c)], [rjust([u(fn`connection, %0)], 10)][space(3)][rjust([u(fn`idle, %0)], 4)], [ansi(+grey47, -----Offline-----)])] [ljust([u(%0/duties)], [sub([width(%0)], 48)],,1)]
+&FN`VILLAGE_FORMAT -who Command=[ljust([u(fn`gender, %0)] [u(fn`name, %0)], 20,,1)][ljust([alias(%0)], 6,, 1)][rjust([u(fn`connection, %0)],10,,1)][space(3)][rjust([u(fn`idle, %0)], 4,,1)] [ljust([u(fn`loc, %0)], 20,,1)][rjust([u(fn`affil, %0)], [sub([width(%#)], 64)],,1)]
+&FN`ZONE -who Command=[setq(0, [zone([loc(%0)])])][if(%q0, [ansi(+white, %b%[[name(%q0)])])]
+&MSG -who Command=
+&MSG`KEY -who Command=[menu(customcolor, -Who Key, +forestgreen)]%r[ansi(+Red, Wizard)]%t[ansi(+green, Royalty)]%t[ansi(+cyan, Helper)]%t[ansi(c, Mortal)]%t[ansi(+magenta3, Inactive)]%t[ansi(+purple3, AFK/Idle)]
+&SORT -who Command=
+&SORT`VILLAGE -who Command=[get([get(%0/fingernum)]/affiliate)]
